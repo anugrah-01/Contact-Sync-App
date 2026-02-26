@@ -21,10 +21,11 @@ export const registerUser = async(req, res) =>{
 export const loginUser = async (req, res) => {
     try {
         const {email, password} = req.body;
-        const user = await loginUserService(email, password);
+        const {token, user} = await loginUserService(email, password);
 
         res.status(200).json({
-           message: "Login successful",
+           message: "Login successful", 
+           token,
            user
         });
     } catch (error) {

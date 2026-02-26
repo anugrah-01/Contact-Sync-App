@@ -1,6 +1,7 @@
 import { createUser } from "../repositories/authRepository.js";
 import { getUserByEmail } from "../repositories/authRepository.js"
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const registerUserService = async(name, email, password) => {
     const saltRounds = 10;
@@ -23,8 +24,11 @@ export const loginUserService = async (email, password) => {
         throw err;
     }
 
+    const token =  jwt.sign({userid: user.id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+
     return {
-    id: user.id,
-    email: user.email
-    };
+    token,
+    user: { id: user.id,
+    email: user.email }
+    }
 };
