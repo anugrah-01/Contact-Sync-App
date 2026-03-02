@@ -21,3 +21,15 @@ export const getContactsByUserId = async(user_id) => {
 
     return result.rows;
 };
+
+export const getContactById = async(contactId, user_id) => {
+    const query = 
+        `SELECT id, name, email, phone, created_at
+        FROM contacts
+        WHERE id = $1 AND user_id = $2`
+    
+    const values = [contactId, user_id];
+    const result = await pool.query(query, values);
+
+    return result.rows[0];
+};

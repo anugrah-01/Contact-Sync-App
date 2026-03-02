@@ -1,5 +1,6 @@
 import { createContactService } from "../services/contactService.js";
 import { getContactsService } from "../services/contactService.js";
+import { getContactByIdService } from "../services/contactService.js"
 
 
 export const createContact = async(req, res) => {
@@ -29,6 +30,25 @@ export const getContacts = async(req, res) => {
 
     } catch (error) {
         res.status(400).json({
+            message: error.message
+        });
+    }
+};
+
+export const getContactById = async(req, res) =>{
+    try {
+        const contactId = req.params.id;
+        const userId = req.user.userid;
+
+        const contact = await getContactByIdService(contactId, userId);
+        res.status(200).json(contact);
+    } catch (error) {
+        if(error.message == 'Contact not found'){
+            return res.status(404).json({
+                message: error.message
+            });
+        }
+        return res.status(400).json({
             message: error.message
         });
     }

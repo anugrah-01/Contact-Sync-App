@@ -1,5 +1,6 @@
 import { createContact } from "../repositories/contactRepository.js";
 import { getContactsByUserId } from "../repositories/contactRepository.js";
+import { getContactById } from "../repositories/contactRepository.js";
 
 export const createContactService = async(contactData, userId) => {
 
@@ -20,4 +21,17 @@ export const getContactsService = async(userId) => {
     const allContacts = await getContactsByUserId(userId);
 
     return allContacts;
+};
+
+export const getContactByIdService = async(contactId, userId) =>{
+
+    const contact = await getContactById(contactId, userId);
+
+    if(!contact){
+        const err = new Error("Contact not found");
+        throw err;
+    }
+
+    return contact;
+
 };
