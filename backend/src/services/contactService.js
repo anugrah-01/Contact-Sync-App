@@ -29,6 +29,7 @@ export const getContactByIdService = async(contactId, userId) =>{
 
     if(!contact){
         const err = new Error("Contact not found");
+        err.statusCode = 404;
         throw err;
     }
 
