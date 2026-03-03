@@ -1,6 +1,8 @@
-import { createContact } from "../repositories/contactRepository.js";
+import { createContact, deleteContact } from "../repositories/contactRepository.js";
 import { getContactsByUserId } from "../repositories/contactRepository.js";
 import { getContactById } from "../repositories/contactRepository.js";
+import { updateContact } from "../repositories/contactRepository.js";
+import { deleteContact } from "../repositories/contactRepository.js";
 
 export const createContactService = async(contactData, userId) => {
 
@@ -34,5 +36,31 @@ export const getContactByIdService = async(contactId, userId) =>{
     }
 
     return contact;
+};
 
+export const updateContactService = async(contactId, userId, contactData) => {
+
+    const { name, email, phone } = contactData;
+    const updatedContact = await updateContact(contactId, userId, name, email, phone);
+
+    if(!updatedContact){
+        const err = new Error("Contact not found");
+        err.statusCode = 404;
+        throw err;
+    }
+
+    return updatedContact;
+};
+
+export const deleteContactService = async(contactId, userId) => {
+
+    const deletedContact = await deleteContact(contactId, userId);
+
+    if(!deletedContact){
+        const err = new Error("Contact not found");
+        err.statusCode = 404;
+        throw err;
+    }
+
+    return deletedContact;
 };

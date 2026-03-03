@@ -1,7 +1,8 @@
 import { createContactService } from "../services/contactService.js";
 import { getContactsService } from "../services/contactService.js";
-import { getContactByIdService } from "../services/contactService.js"
-
+import { getContactByIdService } from "../services/contactService.js";
+import { updateContactService } from "../services/contactService.js";
+import { deleteContactService } from "../services/contactService.js";
 
 export const createContact = async(req, res, next) => {
     try {
@@ -14,7 +15,6 @@ export const createContact = async(req, res, next) => {
             message: "Contact created successfully",
             contact : newContact
         });
-
     } catch (error) {
         next(error);
     }
@@ -38,6 +38,39 @@ export const getContactById = async(req, res, next) =>{
 
         const contact = await getContactByIdService(contactId, userId);
         res.status(200).json(contact);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateContact = async(req, res, next) =>{
+    try {
+        const contactId = req.params.id;
+        const userId = req.user.userid;
+
+        const contactData = req.body;
+        const updatedContact = await updateContactService(contactId, userId, contactData);
+
+        res.status(200).json({
+            message: "Contact updated successfully",
+            contact : updatedContact
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const deleteContact = async(req, res, next) => {
+    try {
+        const contactId = req.params.id;
+        const userId = req.user.userid;
+
+        const deletedContact = await deleteContactService(contactId, userId);
+
+        res.status(200).json({
+            message: "Contact deleted successfully",
+            contact : deletedContact
+        });
     } catch (error) {
         next(error);
     }
