@@ -18,9 +18,10 @@ export const createContactService = async(contactData, userId) => {
     return createdContact;
 };
 
-export const getContactsService = async(userId) => {
+export const getContactsService = async(userId, page, limit) => {
 
-    const allContacts = await getContactsByUserId(userId);
+    const offset = (page - 1) * limit;
+    const allContacts = await getContactsByUserId(userId, limit, offset);
 
     return allContacts;
 };

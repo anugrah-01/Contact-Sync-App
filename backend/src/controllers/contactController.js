@@ -23,7 +23,10 @@ export const createContact = async(req, res, next) => {
 export const getContacts = async(req, res, next) => {
     try {
         const userId = req.user.userid;
-        const allContacts = await getContactsService(userId);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const allContacts = await getContactsService(userId, page, limit);
         res.status(200).json(allContacts);
 
     } catch (error) {

@@ -12,11 +12,14 @@ export const createContact = async(name, email, phone, user_id) =>{
         return result.rows[0];
 };
 
-export const getContactsByUserId = async(user_id) => {
+export const getContactsByUserId = async(user_id, limit, offset) => {
     const query = 
         `SELECT * FROM contacts
-        WHERE user_id = $1`
-    const values = [user_id];
+        WHERE user_id = $1
+        ORDER BY created_at DESC
+        LIMIT $2
+        OFFSET $3`
+    const values = [user_id, limit, offset];
     const result = await pool.query(query, values);
 
     return result.rows;
