@@ -1,4 +1,4 @@
-import { createContact, deleteContact } from "../repositories/contactRepository.js";
+import { createContact } from "../repositories/contactRepository.js";
 import { getContactsByUserId } from "../repositories/contactRepository.js";
 import { getContactById } from "../repositories/contactRepository.js";
 import { updateContact } from "../repositories/contactRepository.js";
