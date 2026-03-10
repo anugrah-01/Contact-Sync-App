@@ -23,8 +23,12 @@ jobs:
         run: npm install
         working-directory: backend
 
-      - name: Verify backend structure
-        run: ls
+      - name: Run ESLint
+        run: npm run lint
+        working-directory: backend
+
+      - name: Build Docker image
+        run: docker build -t contact-sync-backend .
         working-directory: backend
 
 

@@ -20,7 +20,7 @@ export const authMidd = (req, res, next) =>{
         req.user = decoded;
         next();
 
-    } catch (error) {
+    } catch {
         return res.status(401).json({ message: "Authorization header missing" });
     }
 };
