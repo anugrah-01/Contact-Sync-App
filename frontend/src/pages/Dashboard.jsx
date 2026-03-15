@@ -82,48 +82,75 @@ function Dashboard() {
     }
 
     return (
-        <div>
-            <h1>Dashboard</h1>  
+        <div className="min-h-screen bg gray-100 p-8">
 
-            <button onClick={handleLogout}>Logout</button>  {/* when user clicks logout button, handleLogout function is called to log the user out and navigate them back to the login page */} 
+            <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
 
-            <h2>Add Contact</h2>   
+                <div className="flex justify-between items-center mb-6">
 
-            <form onSubmit={handleSubmit}>  {/* when form is submitted, handleSubmit function is called to either add a new contact or update an existing contact based on whether editingContactId is set or not */}
-                <input type="text" placeholder="Name" value={name || ""} onChange={e => setName(e.target.value)}/>
-                <br />
+                    <h1 className="text-2xl font-bold">Dashboard</h1>
 
-                <input type="email" placeholder="Email" value={email || ""} onChange={e => setEmail(e.target.value)} />
-                <br />
+                    <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
+                        Logout
+                    </button>
 
-                <input type="text" placeholder="Phone" value={phone || ""} onChange={e => setPhone(e.target.value)} />
-                <br />
+                </div>  {/* when user clicks logout button, handleLogout function is called to log the user out and navigate them back to the login page */} 
+                
 
-                <button type="submit">
-                    {editingContactId ? "Update Contact" : "Add Contact"}
-                </button>
-            </form>
+                <form onSubmit={handleSubmit} className="space-y-3">  {/* when form is submitted, handleSubmit function is called to either add a new contact or update an existing contact based on whether editingContactId is set or not */}
+                    <input type="text" placeholder="Name" value={name || ""} onChange={e => setName(e.target.value)} className="w-full border p-2 rounded"/>
 
-            <h2>Your Contacts</h2>
+                    <input type="email" placeholder="Email" value={email || ""} onChange={e => setEmail(e.target.value)} className="w-full border p-2 rounded"/>
 
-            {loading ? (
-                <p>Loading contacts...</p>   //display loading message while contacts are being fetched from backend
-            ) : (contacts.map(contact => (   //map function is used to iterate over contacts array and display each contact's name and email in the UI, each contact is displayed in a div with a unique key (contact.id) to help React identify which items have changed, are added, or are removed
-                    <div key={contact.id}>
-                        <p>Name: {contact.name}</p>
-                        <p>Email: {contact.email}</p>
-                        <p>Phone: {contact.phone}</p>
+                    <input type="text" placeholder="Phone" value={phone || ""} onChange={e => setPhone(e.target.value)} className="w-full border p-2 rounded"/>
 
-                        <button onClick={() => handleEditContact(contact)}>
-                            Edit
-                        </button>
+                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                        {editingContactId ? "Update Contact" : "Add Contact"}
+                    </button>
+                </form>
 
-                        <button onClick={() => handleDeleteContact(contact.id)}>
-                            Delete
-                        </button>
-                    </div>
-                ))
-            )}
+                <h2 className="text-xl font-semibold mt-6 mb-3">
+                    Your Contacts
+                </h2>
+
+                {loading ? (
+                <p>Loading contacts...</p>
+                ) : (
+                    contacts.map((contact) => (
+                        <div
+                            key={contact.id}
+                            className="border p-3 mb-2 rounded flex justify-between items-center"
+                            >
+
+                            <div>
+                                <p className="font-semibold">{contact.name}</p>
+                                <p className="text-sm text-gray-600">{contact.email}</p>
+                                <p className="text-sm text-gray-600">{contact.phone}</p>
+                            </div>
+
+                            <div className="space-x-2">
+
+                                <button
+                                onClick={() => handleEditContact(contact)}
+                                className="bg-yellow-400 px-3 py-1 rounded"
+                                >
+                                Edit
+                                </button>
+
+                                <button
+                                onClick={() => handleDeleteContact(contact.id)}
+                                className="bg-red-500 text-white px-3 py-1 rounded"
+                                >
+                                Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    ))
+                )}
+            </div>
+            
         </div>
     );
 }
