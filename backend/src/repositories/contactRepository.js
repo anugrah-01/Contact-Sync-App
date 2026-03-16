@@ -1,12 +1,12 @@
 import pool from "../config/db.js";
 
-export const createContact = async(name, email, phone, user_id) =>{
+export const createContact = async(name, email, phone, company, location, user_id) =>{
     const query = 
-        `INSERT INTO contacts (name, email, phone, user_id)
-        VALUES  ($1, $2, $3, $4)
-        RETURNING id, name, email, phone, created_at`
+        `INSERT INTO contacts (name, email, phone, company, location, user_id)
+        VALUES  ($1, $2, $3, $4, $5, $6)
+        RETURNING *`;
 
-        const values = [name, email, phone, user_id];
+        const values = [name, email, phone, company, location, user_id];
         const result = await pool.query(query, values);
 
         return result.rows[0];

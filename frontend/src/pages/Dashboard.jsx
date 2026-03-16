@@ -30,6 +30,37 @@ function Dashboard() {
         }
     };
 
+    const generateRandomContact = async () => {
+        try {
+            const res = await fetch("https://randomuser.me/api/");  //fetch random user data from randomuser API
+            const data = await res.json();            //parse response as JSON 
+            const user = data.results[0];
+
+            const fullName = `${user.name.first} ${user.name.last}`;
+            setName(fullName);   
+            setEmail(user.email);  
+            setPhone(user.phone);  
+
+        } catch (error) {
+            console.error("Error fetching random contact:", error);
+        }
+    };
+
+    /*response of randomuser API looks like this:
+    {
+    "results": [
+        {
+        "name": {
+            "first": "John",
+            "last": "Doe"
+        },
+        "email": "
+        "phone": "123-456-7890"
+        }
+        ]
+    }
+    */
+
     const handleSubmit = async (e) => {
         e.preventDefault();    //prevent default form submission behavior which would cause a page reload, we want to handle form submission with JavaScript instead
 
@@ -82,7 +113,7 @@ function Dashboard() {
     }
 
     return (
-        <div className="min-h-screen bg gray-100 p-8">
+        <div className="min-h-screen bg-gray-100 p-8">
 
             <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
 
@@ -95,7 +126,15 @@ function Dashboard() {
                     </button>
 
                 </div>  {/* when user clicks logout button, handleLogout function is called to log the user out and navigate them back to the login page */} 
-                
+
+                <h2 className="text-xl font-semibold mb-3">
+                    {editingContactId ? "Edit Contact" : "Add Contact"}
+                </h2>
+
+                <button onClick={generateRandomContact} className="bg-green-500 text-white px-4 py-2 rounded mb-4">                    
+                    Generate Random Contact
+                </button>
+
 
                 <form onSubmit={handleSubmit} className="space-y-3">  {/* when form is submitted, handleSubmit function is called to either add a new contact or update an existing contact based on whether editingContactId is set or not */}
                     <input type="text" placeholder="Name" value={name || ""} onChange={e => setName(e.target.value)} className="w-full border p-2 rounded"/>
@@ -123,9 +162,27 @@ function Dashboard() {
                             >
 
                             <div>
-                                <p className="font-semibold">{contact.name}</p>
-                                <p className="text-sm text-gray-600">{contact.email}</p>
-                                <p className="text-sm text-gray-600">{contact.phone}</p>
+                                <p className="font-semibold text-lg">{contact.name}</p>
+
+                                <p className="text-sm text-gray-600">
+                                    📧 {contact.email}
+                                </p>
+
+                                <p className="text-sm text-gray-600">
+                                    📞 {contact.phone}
+                                </p>
+
+                                {contact.company && (
+                                    <p className="text-sm text-gray-700">
+                                    🏢 {contact.company}
+                                    </p>
+                                )}
+
+                                {contact.location && (
+                                    <p className="text-sm text-gray-500">
+                                    📍 {contact.location}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-x-2">
