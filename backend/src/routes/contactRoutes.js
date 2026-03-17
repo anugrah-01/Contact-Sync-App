@@ -5,6 +5,7 @@ import { getContacts } from "../controllers/contactController.js";
 import { getContactById } from "../controllers/contactController.js";
 import { updateContact } from "../controllers/contactController.js";
 import { deleteContact } from "../controllers/contactController.js";
+import { generateContact } from "../controllers/contactController.js";
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.get("/", authMidd, getContacts);
 router.get("/:id", authMidd, getContactById);
 router.put("/:id", authMidd, updateContact);
 router.delete("/:id", authMidd, deleteContact);
+router.post("/generate", authMidd, generateContact);
 
 export default router;

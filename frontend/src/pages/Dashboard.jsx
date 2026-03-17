@@ -32,17 +32,11 @@ function Dashboard() {
 
     const generateRandomContact = async () => {
         try {
-            const res = await fetch("https://randomuser.me/api/");  //fetch random user data from randomuser API
-            const data = await res.json();            //parse response as JSON 
-            const user = data.results[0];
-
-            const fullName = `${user.name.first} ${user.name.last}`;
-            setName(fullName);   
-            setEmail(user.email);  
-            setPhone(user.phone);  
+            await api.post("/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
+            fetchContacts();   //after generating a random contact, fetch the updated list of contacts to reflect the new contact in the UI
 
         } catch (error) {
-            console.error("Error fetching random contact:", error);
+            console.error(error);
         }
     };
 
@@ -154,12 +148,18 @@ function Dashboard() {
 
                 {loading ? (
                 <p>Loading contacts...</p>
-                ) : (
+                ) : (console.log(contacts),
                     contacts.map((contact) => (
                         <div
                             key={contact.id}
                             className="border p-3 mb-2 rounded flex justify-between items-center"
                             >
+
+                                <img
+                                    src={`https://logo.clearbit.com/${contact.email.split("@")[1]}`}
+                                    alt="logo"
+                                    className="w-10 h-10 rounded"
+                                />
 
                             <div>
                                 <p className="font-semibold text-lg">{contact.name}</p>

@@ -3,6 +3,7 @@ import { getContactsService } from "../services/contactService.js";
 import { getContactByIdService } from "../services/contactService.js";
 import { updateContactService } from "../services/contactService.js";
 import { deleteContactService } from "../services/contactService.js";
+import { generateContactService } from "../services/contactService.js";
 
 export const createContact = async(req, res, next) => {
     try {
@@ -76,5 +77,19 @@ export const deleteContact = async(req, res, next) => {
         });
     } catch (error) {
         next(error);
+    }
+};
+
+export const generateContact = async(req, res) => {
+    try {
+        const userId = req.user.userid;
+        const contact = await generateContactService(userId);
+
+        res.status(200).json({
+            message: "Random contact generated",
+            contact
+        });
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 };

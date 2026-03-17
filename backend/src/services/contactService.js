@@ -84,3 +84,34 @@ export const deleteContactService = async(contactId, userId) => {
 
     return deletedContact;
 };
+
+export const generateContactService = async(userId) => {
+    const res = await axios.get("https://randomuser.me/api/");  //fetch random user data from external API
+    const user = res.data.results[0];
+
+    const name = `${user.name.first} ${user.name.last}`;
+    const phone = user.phone;
+
+    const companyDomains = ["stripe.com", "shopify.com", "tesla.com", "airbnb.com", "google.com", "amazon.com"];
+
+    const randomDomain = companyDomains[Math.floor(Math.random() * companyDomains.length)];
+    const email = `${user.name.first.toLowerCase()}.${user.name.last.toLowerCase()}@${randomDomain}`;  //generate email using random domain from the list
+
+    const domain = email.split("@")[1];
+    let company = null;
+    let location = null;
+
+    try {
+        const response = await axios.get(`https://companyenrichment.abstractapi.com/v1/?api_key=${process.env.ABSTRACT_API_KEY}&domain=${domain}`);
+        console.log(response.data);
+        company = response.data?.name || null;
+        location = response.data?.locality ? `${response.data.locality}, ${response.data.country}` : null;
+    } catch (error) {
+        console.log("Company enrichment failed:", error.message);
+    }
+
+    const createdContact = await createContact(name, email, phone, company, location, userId);
+    console.log("Generated contact:", createdContact);
+
+    return createdContact;
+};
