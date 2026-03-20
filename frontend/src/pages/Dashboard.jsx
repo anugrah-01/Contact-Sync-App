@@ -107,109 +107,123 @@ function Dashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
+  <div className="min-h-screen bg-gray-100 p-6">
+    <div className="max-w-3xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800 tracking-tight">
+          Contact Dashboard
+        </h1>
 
-            <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </button>
+      </div>
 
-                <div className="flex justify-between items-center mb-6">
+      <div className="space-y-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <button
+            onClick={generateRandomContact}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mb-4"
+          >
+            Generate Business Contact
+          </button>
 
-                    <h1 className="text-2xl font-bold">Dashboard</h1>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
 
-                    <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
-                        Logout
-                    </button>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
 
-                </div>  {/* when user clicks logout button, handleLogout function is called to log the user out and navigate them back to the login page */} 
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
 
-                <h2 className="text-xl font-semibold mb-3">
-                    {editingContactId ? "Edit Contact" : "Add Contact"}
-                </h2>
-
-                <button onClick={generateRandomContact} className="bg-green-500 text-white px-4 py-2 rounded mb-4">                    
-                    Generate Random Contact
-                </button>
-
-
-                <form onSubmit={handleSubmit} className="space-y-3">  {/* when form is submitted, handleSubmit function is called to either add a new contact or update an existing contact based on whether editingContactId is set or not */}
-                    <input type="text" placeholder="Name" value={name || ""} onChange={e => setName(e.target.value)} className="w-full border p-2 rounded"/>
-
-                    <input type="email" placeholder="Email" value={email || ""} onChange={e => setEmail(e.target.value)} className="w-full border p-2 rounded"/>
-
-                    <input type="text" placeholder="Phone" value={phone || ""} onChange={e => setPhone(e.target.value)} className="w-full border p-2 rounded"/>
-
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                        {editingContactId ? "Update Contact" : "Add Contact"}
-                    </button>
-                </form>
-
-                <h2 className="text-xl font-semibold mt-6 mb-3">
-                    Your Contacts
-                </h2>
-
-                {loading ? (
-                <p>Loading contacts...</p>
-                ) : (console.log(contacts),
-                    contacts.map((contact) => (
-                        <div
-                            key={contact.id}
-                            className="border p-3 mb-2 rounded flex justify-between items-center"
-                            >
-
-                                <img
-                                    src={`https://logo.clearbit.com/${contact.email.split("@")[1]}`}
-                                    alt="logo"
-                                    className="w-10 h-10 rounded"
-                                />
-
-                            <div>
-                                <p className="font-semibold text-lg">{contact.name}</p>
-
-                                <p className="text-sm text-gray-600">
-                                    📧 {contact.email}
-                                </p>
-
-                                <p className="text-sm text-gray-600">
-                                    📞 {contact.phone}
-                                </p>
-
-                                {contact.company && (
-                                    <p className="text-sm text-gray-700">
-                                    🏢 {contact.company}
-                                    </p>
-                                )}
-
-                                {contact.location && (
-                                    <p className="text-sm text-gray-500">
-                                    📍 {contact.location}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="space-x-2">
-
-                                <button
-                                onClick={() => handleEditContact(contact)}
-                                className="bg-yellow-400 px-3 py-1 rounded"
-                                >
-                                Edit
-                                </button>
-
-                                <button
-                                onClick={() => handleDeleteContact(contact.id)}
-                                className="bg-red-500 text-white px-3 py-1 rounded"
-                                >
-                                Delete
-                                </button>
-
-                            </div>
-
-                        </div>
-                    ))
-                )}
-            </div>
-            
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded w-full font-medium"
+            >
+              {editingContactId ? "Update Contact" : "Add Contact"}
+            </button>
+          </form>
         </div>
-    );
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Your Contacts</h2>
+
+          {loading ? (
+            <p>Loading contacts...</p>
+          ) : contacts.length === 0 ? (
+            <p className="text-gray-500">No contacts yet</p>
+          ) : (
+            <div className="space-y-3">
+              {contacts.map((contact) => (
+                <div
+                  key={contact.id}
+                  className="border border-gray-200 p-4 rounded-lg flex justify-between items-center hover:shadow-md transition"
+                >
+                  <div>
+                    <p className="font-semibold text-lg text-gray-800">
+                      {contact.name}
+                    </p>
+
+                    <p className="text-sm text-gray-600">{contact.email}</p>
+                    <p className="text-sm text-gray-600">{contact.phone}</p>
+
+                    {contact.company && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        🏢 {contact.company}
+                      </p>
+                    )}
+
+                    {contact.location && (
+                      <p className="text-sm text-gray-500">
+                        📍 {contact.location}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditContact(contact)}
+                      className="bg-yellow-400 hover:bg-yellow-500 px-3 py-2 rounded"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteContact(contact.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
 }
 
 export default Dashboard;
