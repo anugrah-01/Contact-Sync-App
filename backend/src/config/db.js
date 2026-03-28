@@ -2,16 +2,15 @@ import pkg from "pg";
 const { Pool } = pkg;
 
 const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "contact_sync",
-    password: "postgres",
-    port: 5432
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
 
 pool.connect()
     .then(() => {
-        console.log("Database Connected Succesfully");
+        console.log("Database Connected Successfully");
     })
     .catch((err) => {
         console.log("Database Connection Failed:", err.message);
