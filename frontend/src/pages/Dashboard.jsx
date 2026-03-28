@@ -15,7 +15,13 @@ function Dashboard() {
     const navigate = useNavigate();
 
     useEffect(() => {     //runs when component mounts/ page loads, fetches contacts from backend and updates state with setContacts, then contacts are displayed in the UI
-        fetchContacts();   
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+          navigate("/"); // 👈 go to login/signup selector page
+          return;
+      }  
+      fetchContacts();   
     }, []);
 
     const fetchContacts = async () => {
@@ -103,7 +109,7 @@ function Dashboard() {
 
     const handleLogout = () => {
         localStorage.removeItem("token");  //remove token from local storage to log the user out
-        navigate("/login");   //navigate user back to login page after logging out
+        navigate("/");   //navigate user back to login page after logging out
     }
 
     return (
