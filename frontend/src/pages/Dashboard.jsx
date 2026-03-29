@@ -27,7 +27,7 @@ function Dashboard() {
     const fetchContacts = async () => {
         try {
             setLoading(true);       
-            const res = await api.get("/contacts");
+            const res = await api.get("/api/contacts");
             setContacts(res.data);     //update contacts state with data from backend so setContacts will contain contacts like [{id: 1, name: "John Doe", email: "john.doe@example.com"}]
         } catch (err) {
             console.error(err);
@@ -39,7 +39,7 @@ function Dashboard() {
 
     const generateRandomContact = async () => {
         try {
-            const res = await api.post("/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
+            const res = await api.post("/api/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
             console.log("Generate response:", res.data);
             fetchContacts();   //after generating a random contact, fetch the updated list of contacts to reflect the new contact in the UI
 
@@ -75,14 +75,14 @@ function Dashboard() {
         try{
              if (editingContactId) {
 
-                await api.put(`/contacts/${editingContactId}`, {
+                await api.put(`/api/contacts/${editingContactId}`, {
                     name,
                     email,
                     phone
                 });   //update existing contact in the backend with new data from form fields
 
             } else {
-                await api.post("/contacts", {name, email, phone});  //send new contact data to backend to create a new contact in the database
+                await api.post("/api/contacts", {name, email, phone});  //send new contact data to backend to create a new contact in the database
             }
 
             fetchContacts();   //after adding a contact, fetch the updated list of contacts to reflect the new contact in the UI
@@ -106,7 +106,7 @@ function Dashboard() {
 
     const handleDeleteContact = async (contactId) => {
         try {
-            await api.delete(`/contacts/${contactId}`);
+            await api.delete(`/api/contacts/${contactId}`);
             fetchContacts();   //after deleting a contact, fetch the updated list of contacts to reflect the deletion in the UI
         } catch (err) {
             console.log("Delete error:", err);
