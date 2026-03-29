@@ -12,6 +12,18 @@ export const createContactService = async(contactData, userId) => {
 
     const {name, email, phone} = contactData;
     const domain = email.split("@")[1];
+
+    console.log("User ID:", userId);
+
+    if(!name){
+        const err = new Error("Invalid name");
+        throw err;
+    }
+
+    if(!email){
+        const err = new Error("Invalid email");
+        throw err;
+    }
     
     try {
         const response = await axios.get(`https://companyenrichment.abstractapi.com/v1/?api_key=${process.env.ABSTRACT_API_KEY}&domain=${domain}`);
@@ -25,11 +37,6 @@ export const createContactService = async(contactData, userId) => {
         
     } catch (error) {
         console.log("Company enrichment failed:", error.message);
-    }
-
-    if(!name){
-        const err = new Error("Invalid name");
-        throw err;
     }
 
     const createdContact = await createContact(name, email, phone, company, location, userId);
