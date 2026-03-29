@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const authMidd = (req, res, next) =>{
     try {
+        console.log("Middleware hit");
         const authHeader = req.headers.authorization;
 
         if(!authHeader){
@@ -18,6 +19,9 @@ export const authMidd = (req, res, next) =>{
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
+        console.log("TOKEN:", token);
+        console.log("DECODED:", decoded);
+
         next();
 
     } catch {
