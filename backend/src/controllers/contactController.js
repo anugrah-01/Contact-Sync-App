@@ -9,6 +9,7 @@ export const createContact = async(req, res, next) => {
     try {
         const contactData = req.body;
         const userId = req.user.userid;
+        console.log('userId:' , userId);
         
         const newContact = await createContactService(contactData, userId);
 
