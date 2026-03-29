@@ -24,7 +24,11 @@ export const authMidd = (req, res, next) =>{
 
         next();
 
-    } catch {
-        return res.status(401).json({ message: "Authorization header missing" });
+    } catch (error) {
+        console.error("AUTH ERROR:", error);
+        return res.status(401).json({
+            message: "Invalid token",
+            error: error.message
+        });
     }
 };
