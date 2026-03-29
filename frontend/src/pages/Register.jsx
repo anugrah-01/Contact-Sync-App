@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+    const[name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -12,12 +13,13 @@ function Register() {
 
         try {
             const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+                name,
                 email,
                 password
             });
             console.log(res.data);
 
-            navigate("/dashboard");
+            navigate("/login");
 
         } catch (error) {
             console.error(error.response?.data || error.message);

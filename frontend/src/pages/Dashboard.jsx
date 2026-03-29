@@ -39,7 +39,7 @@ function Dashboard() {
 
     const generateRandomContact = async () => {
         try {
-            await api.post("/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
+            const res = await api.post("/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
             console.log("Generate response:", res.data);
             fetchContacts();   //after generating a random contact, fetch the updated list of contacts to reflect the new contact in the UI
 
@@ -98,7 +98,7 @@ function Dashboard() {
             console.error("BACKEND RESPONSE:", err.response?.data);
 
             alert(
-                error.response?.data?.message ||
+                err.response?.data?.message ||
                 "Failed to save contact"
             );
         }
