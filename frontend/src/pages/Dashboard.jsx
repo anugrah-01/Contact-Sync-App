@@ -31,6 +31,7 @@ function Dashboard() {
             setContacts(res.data);     //update contacts state with data from backend so setContacts will contain contacts like [{id: 1, name: "John Doe", email: "john.doe@example.com"}]
         } catch (err) {
             console.error(err);
+            alert(err.response?.data?.message || "Failed to fetch contacts. Please try again.");  //show an alert if there was an error fetching contacts from backend
         } finally {
             setLoading(false);  //set loading to false once we have fetched contacts, this can be used to hide the loading indicator in the UI
         }
@@ -39,10 +40,17 @@ function Dashboard() {
     const generateRandomContact = async () => {
         try {
             await api.post("/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
+            console.log("Generate response:", res.data);
             fetchContacts();   //after generating a random contact, fetch the updated list of contacts to reflect the new contact in the UI
 
         } catch (error) {
             console.error(error);
+            console.error("BACKEND RESPONSE:", error.response?.data);
+
+            alert(
+                error.response?.data?.message ||
+                "Failed to generate contact (check backend logs)"
+            );
         }
     };
 
@@ -87,6 +95,12 @@ function Dashboard() {
 
         } catch (err) {
             console.error(err);
+            console.error("BACKEND RESPONSE:", err.response?.data);
+
+            alert(
+                error.response?.data?.message ||
+                "Failed to save contact"
+            );
         }
     };
 
@@ -95,7 +109,8 @@ function Dashboard() {
             await api.delete(`/contacts/${contactId}`);
             fetchContacts();   //after deleting a contact, fetch the updated list of contacts to reflect the deletion in the UI
         } catch (err) {
-            console.log(err);
+            console.log("Delete error:", err);
+            alert(err.response?.data?.message || "Failed to delete contact");
         }
     }
 
