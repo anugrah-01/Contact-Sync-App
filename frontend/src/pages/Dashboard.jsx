@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api.js";
 import { useNavigate } from "react-router-dom";
 
-function Dashboard() {
+const Dashboard = () => {
     const [contacts, setContacts] = useState([]); //state to hold contacts fetched from backend so setContacts is used to update it
 
     const [name, setName] = useState("");
@@ -128,123 +128,151 @@ function Dashboard() {
     }
 
     return (
-  <div className="min-h-screen bg-gray-100 p-6">
-    <div className="max-w-3xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 tracking-tight">
-          Contact Dashboard
-        </h1>
+        <div className="flex min-h-screen bg-gray-100">
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-      </div>
+            {/* Sidebar */}
+            <div className="w-64 bg-white shadow-lg p-6">
+                <h2 className="text-xl font-bold mb-6">ContactSync</h2>
 
-      <div className="space-y-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <button
-            onClick={generateRandomContact}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mb-4"
-          >
-            Generate Business Contact
-          </button>
-
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-
-            <input
-              type="text"
-              placeholder="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded w-full font-medium"
-            >
-              {editingContactId ? "Update Contact" : "Add Contact"}
-            </button>
-          </form>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Your Contacts</h2>
-
-          {loading ? (
-            <p>Loading contacts...</p>
-          ) : contacts.length === 0 ? (
-            <p className="text-gray-500">No contacts yet</p>
-          ) : (
-            <div className="space-y-3">
-              {contacts.map((contact) => (
-                <div
-                  key={contact.id}
-                  className="border border-gray-200 p-4 rounded-lg flex justify-between items-center hover:shadow-md transition"
-                >
-                  <div>
-                    <p className="font-semibold text-lg text-gray-800">
-                      {contact.name}
-                    </p>
-
-                    <p className="text-sm text-gray-600">{contact.email}</p>
-                    <p className="text-sm text-gray-600">{contact.phone}</p>
-
-                    {contact.company && (
-                      <p className="text-sm text-gray-700 mt-1">
-                        🏢 {contact.company}
-                      </p>
-                    )}
-
-                    {contact.location && (
-                      <p className="text-sm text-gray-500">
-                        📍 {contact.location}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditContact(contact)}
-                      className="bg-yellow-400 hover:bg-yellow-500 px-3 py-2 rounded"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => handleDeleteContact(contact.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+                <ul className="space-y-3">
+                    <li className="text-blue-600 font-medium">Dashboard</li>
+                    <li className="text-gray-600">Contacts</li>
+                    <li className="text-gray-600">Settings</li>
+                </ul>
             </div>
-          )}
+
+            {/* Main Content */}
+            <div className="flex-1 p-6">
+
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-semibold text-gray-800">
+                        Contact Dashboard
+                    </h1>
+
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                    >
+                        Logout
+                    </button>
+                </div>
+
+                {/* Add / Edit Contact Card */}
+                <div className="bg-white p-6 rounded-lg shadow mb-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold">
+                            {editingContactId ? "Edit Contact" : "Add Contact"}
+                        </h2>
+
+                        <button
+                            onClick={generateRandomContact}
+                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded"
+                        >
+                            Generate Contact
+                        </button>
+                    </div>
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                    >
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="border p-2 rounded"
+                        />
+
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="border p-2 rounded"
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="Phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="border p-2 rounded"
+                        />
+
+                        <button
+                            type="submit"
+                            className="col-span-1 md:col-span-3 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+                        >
+                            {editingContactId ? "Update Contact" : "Add Contact"}
+                        </button>
+                    </form>
+                </div>
+
+                {/* Contacts List */}
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h2 className="text-lg font-semibold mb-4">Your Contacts</h2>
+
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : contacts.length === 0 ? (
+                        <p className="text-gray-500">No contacts yet</p>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {contacts.map((contact) => (
+                                <div
+                                    key={contact.id}
+                                    className="bg-gray-50 border border-gray-200 p-4 rounded-lg hover:shadow-md transition"
+                                >
+                                    {/* Top */}
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div>
+                                            <p className="font-semibold text-lg text-gray-800">
+                                                {contact.name}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {contact.email}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleEditContact(contact)}
+                                                className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded text-sm"
+                                            >
+                                                Edit
+                                            </button>
+
+                                            <button
+                                                onClick={() => handleDeleteContact(contact.id)}
+                                                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Bottom */}
+                                    <div className="text-sm text-gray-700 space-y-1">
+                                        <p>📞 {contact.phone}</p>
+
+                                        {contact.company && (
+                                            <p>🏢 {contact.company}</p>
+                                        )}
+
+                                        {contact.location && (
+                                            <p>📍 {contact.location}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-);
-}
+    );
+};
 
 export default Dashboard;
