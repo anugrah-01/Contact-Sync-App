@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api.js";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
     const [contacts, setContacts] = useState([]); //state to hold contacts fetched from backend so setContacts is used to update it
@@ -11,6 +12,7 @@ const Dashboard = () => {
     const [editingContactId, setEditingContactId] = useState(null); //state to track which contact is being edited, if any
 
     const [loading, setLoading] = useState(true); //state to track loading status of contacts, initially set to true while we fetch contacts from backend
+    const [searchTerm, setSearchTerm] = useState(""); 
 
     const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ const Dashboard = () => {
             setContacts(res.data);     //update contacts state with data from backend so setContacts will contain contacts like [{id: 1, name: "John Doe", email: "john.doe@example.com"}]
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.message || "Failed to fetch contacts. Please try again.");  //show an alert if there was an error fetching contacts from backend
+            toast.error(err.response?.data?.message || "Failed to fetch contacts. Please try again.");  //show a toast if there was an error fetching contacts from backend
         } finally {
             setLoading(false);  //set loading to false once we have fetched contacts, this can be used to hide the loading indicator in the UI
         }
@@ -40,14 +42,14 @@ const Dashboard = () => {
     const generateRandomContact = async () => {
         try {
             const res = await api.post("/api/contacts/generate");  //call backend endpoint to generate a random contact, backend will use randomuser API to get random contact data and create a new contact in the database
-            console.log("Generate response:", res.data);
+            toast.success("Contact generated");
             fetchContacts();   //after generating a random contact, fetch the updated list of contacts to reflect the new contact in the UI
 
         } catch (error) {
             console.error(error);
             console.error("BACKEND RESPONSE:", error.response?.data);
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 "Failed to generate contact (check backend logs)"
             );
@@ -80,9 +82,11 @@ const Dashboard = () => {
                     email,
                     phone
                 });   //update existing contact in the backend with new data from form fields
+                toast.success("Contact updated");
 
             } else {
                 await api.post("/api/contacts", {name, email, phone});  //send new contact data to backend to create a new contact in the database
+                toast.success("Contact added");
             }
 
             fetchContacts();   //after adding a contact, fetch the updated list of contacts to reflect the new contact in the UI
@@ -97,10 +101,7 @@ const Dashboard = () => {
             console.error(err);
             console.error("BACKEND RESPONSE:", err.response?.data);
 
-            alert(
-                err.response?.data?.message ||
-                "Failed to save contact"
-            );
+            toast.error(err.response?.data?.message || "Failed to save contact");
         }
     };
 
@@ -110,7 +111,7 @@ const Dashboard = () => {
             fetchContacts();   //after deleting a contact, fetch the updated list of contacts to reflect the deletion in the UI
         } catch (err) {
             console.log("Delete error:", err);
-            alert(err.response?.data?.message || "Failed to delete contact");
+            toast.error(err.response?.data?.message || "Failed to delete contact");
         }
     }
 
@@ -126,6 +127,13 @@ const Dashboard = () => {
         localStorage.removeItem("token");  //remove token from local storage to log the user out
         navigate("/");   //navigate user back to login page after logging out
     }
+
+    // FILTERED CONTACTS
+    const filteredContacts = contacts.filter((contact) =>
+        contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contact.company?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -158,7 +166,7 @@ const Dashboard = () => {
                     </button>
                 </div>
 
-                {/* Add / Edit Contact Card */}
+                {/* Add / Edit Contact */}
                 <div className="bg-white p-6 rounded-lg shadow mb-6">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-lg font-semibold">
@@ -210,17 +218,29 @@ const Dashboard = () => {
                     </form>
                 </div>
 
-                {/* Contacts List */}
+                {/* Contacts */}
                 <div className="bg-white p-6 rounded-lg shadow">
-                    <h2 className="text-lg font-semibold mb-4">Your Contacts</h2>
+                    
+                    {/* Header + Search */}
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold">Your Contacts</h2>
+
+                        <input
+                            type="text"
+                            placeholder="Search contacts..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="border px-3 py-2 rounded w-64"
+                        />
+                    </div>
 
                     {loading ? (
                         <p>Loading...</p>
-                    ) : contacts.length === 0 ? (
-                        <p className="text-gray-500">No contacts yet</p>
+                    ) : filteredContacts.length === 0 ? (
+                        <p className="text-gray-500">No contacts found</p>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {contacts.map((contact) => (
+                            {filteredContacts.map((contact) => (
                                 <div
                                     key={contact.id}
                                     className="bg-gray-50 border border-gray-200 p-4 rounded-lg hover:shadow-md transition"

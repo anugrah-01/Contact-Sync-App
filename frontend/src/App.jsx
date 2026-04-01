@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -7,7 +8,8 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
   return (
-    <BrowserRouter>
+      <BrowserRouter>
+      <Toaster position = "top-right"/>
       <Routes>   {/* consists of all routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -17,5 +19,4 @@ function App() {
     </BrowserRouter>
   );
 }
-
 export default App;
